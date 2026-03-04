@@ -1,0 +1,30 @@
+{% extends "base.html" %} {# Code Quality: Adheres to DRY principle by extending base layout #}
+
+{% block title %}Host Login - miniMenti{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    {# Responsiveness: Uses Bootstrap grid (col-md-6 col-lg-4) to ensure mobile-friendly scaling #}
+    <div class="col-md-6 col-lg-4">
+        <h2 class="text-center mb-4 fw-bold">Host Login</h2>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                {# Accessibility: Explicit 'for' attribute links label to input for screen readers #}
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control form-control-lg" id="username" name="username" required>
+            </div>
+            <div class="mb-4">
+                {# Accessibility: Input type='password' obscures text for security #}
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control form-control-lg" id="password" name="password" required>
+            </div>
+            {# Look and Feel: Full-width button for clear call-to-action #}
+            <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm">
+                Login
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
