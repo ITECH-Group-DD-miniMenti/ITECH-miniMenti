@@ -1,15 +1,13 @@
-{% extends "base.html" %} 
-{% block title %}Home{% endblock %}
+{% extends "base.html" %} {% block title %}Home - miniMenti{% endblock %}
+
 {% block content %}
-<div class=\"py-5 text-center\">
+<div class="py-5 text-center">
+    <h1 class="display-5 fw-bold text-primary">miniMenti - Engage Your Audience</h1>
+    <p class="lead mb-4">An interactive classroom polling tool (MVP).</p>
     
-    <h1 class=\"display-5 fw-bold text-primary\">miniMenti - Engage Your Audience</h1>
-    <p class=\"lead mb-4\">An interactive classroom polling tool (MVP).</p>
-    
-    
-    <div class=\"d-grid gap-2 d-sm-flex justify-content-sm-center\">
-        <a href=\"/join/\" class=\"btn btn-primary btn-lg px-4 gap-3\">Student Join</a>
-        <a href=\"/login/\" class=\"btn btn-outline-secondary btn-lg px-4\">Host Login</a>
+    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <a href="/join/" class="btn btn-primary btn-lg px-4 gap-3">Student Join</a>
+        <a href="/login/" class="btn btn-outline-secondary btn-lg px-4">Host Login</a>
     </div>
 </div>
 {% endblock %}
