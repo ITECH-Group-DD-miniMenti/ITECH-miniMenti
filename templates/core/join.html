@@ -1,24 +1,32 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {# Code Quality: Adheres to DRY principle by extending base layout #}
+
 {% block title %}Join a Poll - miniMenti{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center py-5">
+    {# Responsiveness: Uses Bootstrap grid (col-md-6 col-lg-5) to center and scale the form on mobile screens #}
     <div class="col-md-6 col-lg-5 text-center">
         <h2 class="fw-bold mb-4">Enter 6-Digit Code</h2>
+        
         {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                     {{ message }}
+                    {# Accessibility: aria-label="Close" ensures screen readers announce the close button correctly #}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             {% endfor %}
         {% endif %}
+        
         <form method="POST">
             {% csrf_token %}
             <div class="mb-4">
+                {# Accessibility: Clear placeholder and pattern restrict input to guide the user visually and functionally #}
                 <input type="text" name="pin" class="form-control form-control-lg text-center fw-bold shadow-sm" 
                        placeholder="000000" maxlength="6" pattern="[0-9]{6}" required 
                        style="font-size: 3rem; letter-spacing: 0.8rem; border-radius: 15px;">
             </div>
+            {# Look and Feel: Large, prominent call-to-action button for easy clicking on mobile devices #}
             <button type="submit" class="btn btn-primary btn-lg w-100 py-3 fw-bold shadow">Join Now</button>
         </form>
         <p class="mt-4 text-muted small">The 6-digit code is provided by your host.</p>
