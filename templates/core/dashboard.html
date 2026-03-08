@@ -1,0 +1,35 @@
+{% extends "base.html" %} {# Code Quality: Template inheritance maintains visual consistency #}
+
+{% block title %}Dashboard - miniMenti{% endblock %}
+
+{% block content %}
+<div class="py-4">
+    {# M2: Session Management - Primary action to create new interactive sessions #}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">My Polls</h2>
+        <a href="#" class="btn btn-success btn-lg shadow-sm">+ Create Poll</a>
+    </div>
+
+    {# M4: Question Management - Card-based display of poll sessions and settings #}
+    <div class="card shadow-sm mb-3 border-0">
+        <div class="card-body">
+            <h5 class="card-title fw-bold">What is your favorite programming language?</h5>
+            <p class="card-text text-muted">
+                PIN: <span class="fw-bold text-primary fs-5">123456</span> | Status: Active
+            </p>
+            <div class="mt-3">
+                {# S1: Live Results Viewing - Quick access to aggregated data #}
+                <a href="#" class="btn btn-outline-primary btn-sm me-2">View Results</a>
+
+                {# S2: Session Control - Allows host to open/close questions #}
+                <a href="#" class="btn btn-outline-danger btn-sm me-2">Close Poll</a>
+
+                {# C1: Export Results - Option to download session responses as a file (CSV/Excel) #}
+                <a href="#" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-download"></i> Export CSV
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

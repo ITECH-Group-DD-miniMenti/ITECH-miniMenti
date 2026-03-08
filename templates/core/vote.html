@@ -1,0 +1,18 @@
+{% extends "base.html" %} {# Code Quality: Reuses structural components #}
+
+{% block title %}Vote - miniMenti{% endblock %}
+
+{% block content %}
+<div class="py-5 text-center">
+    {# Accessibility: High-contrast, large header for readability #}
+    <h2 class="fw-bold mb-5">What is your favorite programming language?</h2>
+    
+    {# Responsiveness: d-grid layout ensures large, touch-friendly buttons for mobile users #}
+    <div class="d-grid gap-3 col-md-8 col-lg-6 mx-auto">
+        <button class="btn btn-outline-primary btn-lg py-3 fw-bold fs-4">A. Python</button>
+        <button class="btn btn-outline-primary btn-lg py-3 fw-bold fs-4">B. JavaScript</button>
+        <button class="btn btn-outline-primary btn-lg py-3 fw-bold fs-4">C. Java</button>
+        <button class="btn btn-outline-primary btn-lg py-3 fw-bold fs-4">D. C++</button>
+    </div>
+</div>
+{% endblock %}
