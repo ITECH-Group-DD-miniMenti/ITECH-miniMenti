@@ -17,12 +17,18 @@
                 </div>
             {% endfor %}
         {% endif %}
-        
+
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+
         <form method="POST">
             {% csrf_token %}
             <div class="mb-4">
                 {# Accessibility: Clear placeholder and pattern restrict input to guide the user visually and functionally #}
-                <input type="text" name="pin" class="form-control form-control-lg text-center fw-bold shadow-sm" 
+                <input type="text" name="code" class="form-control form-control-lg text-center fw-bold shadow-sm"
                        placeholder="000000" maxlength="6" pattern="[0-9]{6}" required 
                        style="font-size: 3rem; letter-spacing: 0.8rem; border-radius: 15px;">
             </div>
