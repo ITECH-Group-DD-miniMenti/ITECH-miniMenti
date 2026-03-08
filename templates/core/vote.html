@@ -1,18 +1,45 @@
-{% extends "base.html" %} {# Code Quality: Reuses structural components #}
+{% extends "base.html" %}
 
 {% block title %}Vote - miniMenti{% endblock %}
 
 {% block content %}
 <div class="py-5 text-center">
-    {# Accessibility: High-contrast, large header for readability #}
-    <h2 class="fw-bold mb-5">What is your favorite programming language?</h2>
-    
-    {# Responsiveness: d-grid layout ensures large, touch-friendly buttons for mobile users #}
-    <div class="d-grid gap-3 col-md-8 col-lg-6 mx-auto">
-        <button class="btn btn-outline-primary btn-lg py-3 fw-bold fs-4">A. Python</button>
-        <button class="btn btn-outline-primary btn-lg py-3 fw-bold fs-4">B. JavaScript</button>
-        <button class="btn btn-outline-primary btn-lg py-3 fw-bold fs-4">C. Java</button>
-        <button class="btn btn-outline-primary btn-lg py-3 fw-bold fs-4">D. C++</button>
+    {% if question %}
+    <h2 class="fw-bold mb-5">{{ question.text }}</h2>
+
+    {% if success %}
+    <div class="alert alert-success col-md-8 col-lg-6 mx-auto mb-4" role="alert">
+        {{ success }}
     </div>
+    {% endif %}
+
+    <form method="post" class="d-grid gap-3 col-md-8 col-lg-6 mx-auto">
+        {% csrf_token %}
+
+        <button type="submit" name="choice" value="A" class="btn btn-outline-primary btn-lg py-3 fw-bold fs-4">
+            A. {{ question.option_a }}
+        </button>
+
+        <button type="submit" name="choice" value="B" class="btn btn-outline-primary btn-lg py-3 fw-bold fs-4">
+            B. {{ question.option_b }}
+        </button>
+
+        {% if question.option_c %}
+        <button type="submit" name="choice" value="C" class="btn btn-outline-primary btn-lg py-3 fw-bold fs-4">
+            C. {{ question.option_c }}
+        </button>
+        {% endif %}
+
+        {% if question.option_d %}
+        <button type="submit" name="choice" value="D" class="btn btn-outline-primary btn-lg py-3 fw-bold fs-4">
+            D. {{ question.option_d }}
+        </button>
+        {% endif %}
+    </form>
+    {% else %}
+    <div class="alert alert-warning">
+        No question is available for this session yet.
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
