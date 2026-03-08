@@ -1,3 +1,4 @@
+import random
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -5,9 +6,20 @@ from django.contrib.auth.models import User
 class Session(models.Model):
     title = models.CharField(max_length=200)
     host = models.ForeignKey(User, on_delete=models.CASCADE)
-    code = models.CharField(max_length=6, unique=True)
+    code = models.CharField(max_length=6, unique=True, blank=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def generate_code(self):
+        while True:
+            code = str(random.randint(100000, 999999))
+            if not Session.objects.filter(code=code).exists():
+                return code
+
+    def save(self, *args, **kwargs):
+        if not self.code:
+            self.code = self.generate_code()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
