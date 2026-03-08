@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from polls.models import Session, Question, Vote
 from django.shortcuts import render, redirect
+from django.db.models import Count
 
 def home(request):
     return render(request, "core/home.html")
@@ -54,5 +55,25 @@ def vote(request, code):
         "question": question
     })
 
+
 def dashboard(request):
-    return render(request, "core/dashboard.html")
+    question = Question.objects.first()
+
+    if not question:
+        return render(request, "core/dashboard.html", {
+            "question": None
+        })
+
+    votes = Vote.objects.filter(question=question)
+
+    results = {
+        "A": votes.filter(choice="A").count(),
+        "B": votes.filter(choice="B").count(),
+        "C": votes.filter(choice="C").count(),
+        "D": votes.filter(choice="D").count(),
+    }
+
+    return render(request, "core/dashboard.html", {
+        "question": question,
+        "results": results
+    })

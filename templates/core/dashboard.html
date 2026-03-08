@@ -1,35 +1,61 @@
-{% extends "base.html" %} {# Code Quality: Template inheritance maintains visual consistency #}
+{% extends "base.html" %}
 
 {% block title %}Dashboard - miniMenti{% endblock %}
 
 {% block content %}
 <div class="py-4">
-    {# M2: Session Management - Primary action to create new interactive sessions #}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold">My Polls</h2>
         <a href="#" class="btn btn-success btn-lg shadow-sm">+ Create Poll</a>
     </div>
 
-    {# M4: Question Management - Card-based display of poll sessions and settings #}
+    {% if question %}
     <div class="card shadow-sm mb-3 border-0">
         <div class="card-body">
-            <h5 class="card-title fw-bold">What is your favorite programming language?</h5>
+            <h5 class="card-title fw-bold">{{ question.text }}</h5>
             <p class="card-text text-muted">
-                PIN: <span class="fw-bold text-primary fs-5">123456</span> | Status: Active
+                PIN: <span class="fw-bold text-primary fs-5">{{ question.session.code }}</span>
+                | Status:
+                {% if question.session.is_active %}
+                <span class="text-success fw-bold">Active</span>
+                {% else %}
+                <span class="text-danger fw-bold">Closed</span>
+                {% endif %}
             </p>
-            <div class="mt-3">
-                {# S1: Live Results Viewing - Quick access to aggregated data #}
-                <a href="#" class="btn btn-outline-primary btn-sm me-2">View Results</a>
 
-                {# S2: Session Control - Allows host to open/close questions #}
-                <a href="#" class="btn btn-outline-danger btn-sm me-2">Close Poll</a>
+            <div class="mt-4">
+                <h6 class="fw-bold">Results</h6>
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>A. {{ question.option_a }}</span>
+                        <span>{{ results.A }} votes</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>B. {{ question.option_b }}</span>
+                        <span>{{ results.B }} votes</span>
+                    </li>
 
-                {# C1: Export Results - Option to download session responses as a file (CSV/Excel) #}
-                <a href="#" class="btn btn-outline-secondary btn-sm">
-                    <i class="bi bi-download"></i> Export CSV
-                </a>
+                    {% if question.option_c %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>C. {{ question.option_c }}</span>
+                        <span>{{ results.C }} votes</span>
+                    </li>
+                    {% endif %}
+
+                    {% if question.option_d %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>D. {{ question.option_d }}</span>
+                        <span>{{ results.D }} votes</span>
+                    </li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </div>
+    {% else %}
+    <div class="alert alert-warning">
+        No poll data is available yet.
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
