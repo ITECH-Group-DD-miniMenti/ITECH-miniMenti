@@ -36,7 +36,17 @@ def vote(request, code):
             "question": None
         })
 
+    vote_key = f"voted_{question.id}"
+
     if request.method == "POST":
+        if request.session.get(vote_key):
+            return render(request, "core/vote.html", {
+                "session": session,
+                "question": question,
+                "error": "You have already voted.",
+                "already_voted": True
+            })
+
         choice = request.POST.get("choice")
 
         if choice in ["A", "B", "C", "D"]:
@@ -44,15 +54,18 @@ def vote(request, code):
                 question=question,
                 choice=choice
             )
+            request.session[vote_key] = True
             return render(request, "core/vote.html", {
                 "session": session,
                 "question": question,
-                "success": "Your vote has been submitted."
+                "success": "Your vote has been submitted.",
+                "already_voted": True
             })
 
     return render(request, "core/vote.html", {
         "session": session,
-        "question": question
+        "question": question,
+        "already_voted": request.session.get(vote_key, False)
     })
 
 
