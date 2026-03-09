@@ -37,6 +37,9 @@ def vote(request, code):
     except Session.DoesNotExist:
         return redirect("join")
 
+    if not session.is_active:
+        return render(request, "core/poll_closed.html")
+
     if not question:
         return render(request, "core/vote.html", {
             "session": session,
@@ -153,3 +156,11 @@ def create_poll(request):
         return redirect("dashboard")
 
     return render(request, "core/create_poll.html")
+
+def close_poll(request, code):
+    session = Session.objects.get(code=code)
+
+    session.is_active = False
+    session.save()
+
+    return redirect("dashboard")

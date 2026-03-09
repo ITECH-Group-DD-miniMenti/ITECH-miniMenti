@@ -21,15 +21,28 @@
         <div class="card-body">
             <h5 class="card-title fw-bold">{{ poll.question.text }}</h5>
 
-            <p class="card-text text-muted">
-                PIN: <span class="fw-bold text-primary fs-5">{{ poll.session.code }}</span>
-                | Status:
+            <div class="card-text text-muted d-flex align-items-center flex-wrap gap-2">
+                <span>
+                    PIN: <span class="fw-bold text-primary fs-5">{{ poll.session.code }}</span>
+                </span>
+
+                            <span>| Status:
+                    {% if poll.session.is_active %}
+                        <span class="text-success fw-bold">Active</span>
+                    {% else %}
+                        <span class="text-danger fw-bold">Closed</span>
+                    {% endif %}
+                </span>
+
                 {% if poll.session.is_active %}
-                <span class="text-success fw-bold">Active</span>
-                {% else %}
-                <span class="text-danger fw-bold">Closed</span>
+                <form method="POST" action="{% url 'close_poll' poll.session.code %}" class="d-inline">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-danger ms-2">
+                        Close Poll
+                    </button>
+                </form>
                 {% endif %}
-            </p>
+            </div>
 
             <div class="mt-3 text-center">
                 <img src="data:image/png;base64,{{ poll.qr }}" width="120" alt="QR code for joining poll">
