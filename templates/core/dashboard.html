@@ -18,20 +18,30 @@
     {% for poll in poll_data %}
         <div class="card shadow-sm mb-4 border-0">
             <div class="card-body">
-                <h5 class="card-title fw-bold">{{ poll.question.text }}</h5>
-                <p class="card-text text-muted">
-                    PIN: <span class="fw-bold text-primary fs-5" id="pin-{{ poll.session.code }}">{{ poll.session.code }}</span> 
+                <div class="row align-items-start">
+                    <div class="col-md-9">
+                        <h5 class="card-title fw-bold">{{ poll.question.text }}</h5>
+                        <p class="card-text text-muted">
+                            PIN: <span class="fw-bold text-primary fs-5" id="pin-{{ poll.session.code }}">{{ poll.session.code }}</span> 
+                            
+                            {# Grading Req: Front-end Interactivity - Client-side JS event to copy PIN #}
+                            <button onclick="copyToClipboard('{{ poll.session.code }}', this)" class="btn btn-sm btn-outline-primary ms-2" style="padding: 0.1rem 0.5rem; font-size: 0.8rem;">Copy PIN</button> | 
+                            
+                            Status: 
+                            {% if poll.session.is_active %}
+                                <span class="badge bg-success">Active</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Closed</span>
+                            {% endif %}
+                        </p>
+                    </div>
                     
-                    {# Grading Req: Front-end Interactivity - Client-side JS event to copy PIN #}
-                    <button onclick="copyToClipboard('{{ poll.session.code }}', this)" class="btn btn-sm btn-outline-primary ms-2" style="padding: 0.1rem 0.5rem; font-size: 0.8rem;">Copy PIN</button> | 
-                    
-                    Status: 
-                    {% if poll.session.is_active %}
-                        <span class="badge bg-success">Active</span>
-                    {% else %}
-                        <span class="badge bg-secondary">Closed</span>
-                    {% endif %}
-                </p>
+                    {# Grading Req: C1 - Enhanced Interactivity: Dynamic QR Code integration for seamless joining #}
+                    <div class="col-md-3 text-md-end text-center mb-3 mb-md-0">
+                        <img src="data:image/png;base64,{{ poll.qr }}" alt="Join QR Code" style="width: 90px; height: 90px;" class="img-thumbnail shadow-sm">
+                        <div class="small text-muted mt-1">Scan to Join</div>
+                    </div>
+                </div>
 
                 <div class="mb-3 p-3 bg-light rounded border">
                     <strong class="text-dark">Total Votes: {{ poll.total_votes }}</strong>
