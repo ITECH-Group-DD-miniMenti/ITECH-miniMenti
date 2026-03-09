@@ -7,6 +7,9 @@ from django.shortcuts import render, redirect
 
 from polls.models import Session, Question, Vote
 
+import csv
+from django.http import HttpResponse
+
 def home(request):
     return render(request, "core/home.html")
 
@@ -164,3 +167,19 @@ def toggle_poll(request, code):
     session.save()
 
     return redirect("dashboard")
+
+def export_results(request, code):
+    session = Session.objects.get(code=code)
+    question = Question.objects.filter(session=session).first()
+    votes = Vote.objects.filter(question=question)
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="results.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(["Choice"])
+
+    for vote in votes:
+        writer.writerow([vote.choice])
+
+    return response

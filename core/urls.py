@@ -9,4 +9,5 @@ urlpatterns = [
     path("create_poll/", views.create_poll, name="create_poll"),
     path("login/", views.login_view, name="login"),
     path("toggle_poll/<str:code>/", views.toggle_poll, name="toggle_poll"),
+    path("export/<str:code>/", views.export_results, name="export_results"),
 ]
