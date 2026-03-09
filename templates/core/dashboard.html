@@ -1,35 +1,129 @@
-{% extends "base.html" %} {# Code Quality: Template inheritance maintains visual consistency #}
+{% extends "base.html" %}
 
 {% block title %}Dashboard - miniMenti{% endblock %}
 
+{% block extra_head %}
+<meta http-equiv="refresh" content="5">
+{% endblock %}
+
 {% block content %}
 <div class="py-4">
-    {# M2: Session Management - Primary action to create new interactive sessions #}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold">My Polls</h2>
-        <a href="#" class="btn btn-success btn-lg shadow-sm">+ Create Poll</a>
+        <a href="{% url 'create_poll' %}" class="btn btn-success btn-lg shadow-sm">
+            + Create Poll
+        </a>
     </div>
 
-    {# M4: Question Management - Card-based display of poll sessions and settings #}
+    {% if poll_data %}
+    {% for poll in poll_data %}
     <div class="card shadow-sm mb-3 border-0">
         <div class="card-body">
-            <h5 class="card-title fw-bold">What is your favorite programming language?</h5>
-            <p class="card-text text-muted">
-                PIN: <span class="fw-bold text-primary fs-5">123456</span> | Status: Active
-            </p>
-            <div class="mt-3">
-                {# S1: Live Results Viewing - Quick access to aggregated data #}
-                <a href="#" class="btn btn-outline-primary btn-sm me-2">View Results</a>
+            <h5 class="card-title fw-bold">{{ poll.question.text }}</h5>
 
-                {# S2: Session Control - Allows host to open/close questions #}
-                <a href="#" class="btn btn-outline-danger btn-sm me-2">Close Poll</a>
+            <div class="card-text text-muted d-flex align-items-center flex-wrap gap-2">
+                        <span>
+                            PIN: <span class="fw-bold text-primary fs-5">{{ poll.session.code }}</span>
+                        </span>
 
-                {# C1: Export Results - Option to download session responses as a file (CSV/Excel) #}
-                <a href="#" class="btn btn-outline-secondary btn-sm">
-                    <i class="bi bi-download"></i> Export CSV
-                </a>
+                <span>
+                            | Status:
+                            {% if poll.session.is_active %}
+                                <span class="text-success fw-bold">Active</span>
+                            {% else %}
+                                <span class="text-danger fw-bold">Closed</span>
+                            {% endif %}
+                        </span>
+
+                <form method="POST" action="{% url 'toggle_poll' poll.session.code %}" class="d-inline">
+                    {% csrf_token %}
+                    {% if poll.session.is_active %}
+                    <button class="btn btn-sm btn-outline-danger ms-2">
+                        Close Poll
+                    </button>
+                    {% else %}
+                    <button class="btn btn-sm btn-outline-success ms-2">
+                        Reopen Poll
+                    </button>
+                    {% endif %}
+                </form>
+            </div>
+
+            <a href="{% url 'export_results' poll.session.code %}" class="btn btn-sm btn-outline-secondary ms-2">
+                Export CSV
+            </a>
+
+            <div class="mt-3 text-center">
+                <img src="data:image/png;base64,{{ poll.qr }}" width="120" alt="QR code for joining poll">
+                <p class="small text-muted mt-2 mb-1">Scan to vote directly</p>
+                <p class="small mb-0">
+                    <a href="{{ poll.join_url }}" target="_blank">{{ poll.join_url }}</a>
+                </p>
+            </div>
+
+            <div class="mt-4">
+                <h6 class="fw-bold">Results</h6>
+                <p class="text-muted small">Total votes: {{ poll.total_votes }}</p>
+
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>A. {{ poll.question.option_a }}</span>
+                        <span>{{ poll.results.A }} votes</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: {{ poll.percentages.A }}%;">
+                            {{ poll.percentages.A|floatformat:0 }}%
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>B. {{ poll.question.option_b }}</span>
+                        <span>{{ poll.results.B }} votes</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: {{ poll.percentages.B }}%;">
+                            {{ poll.percentages.B|floatformat:0 }}%
+                        </div>
+                    </div>
+                </div>
+
+                {% if poll.question.option_c %}
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>C. {{ poll.question.option_c }}</span>
+                        <span>{{ poll.results.C }} votes</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: {{ poll.percentages.C }}%;">
+                            {{ poll.percentages.C|floatformat:0 }}%
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if poll.question.option_d %}
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>D. {{ poll.question.option_d }}</span>
+                        <span>{{ poll.results.D }} votes</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: {{ poll.percentages.D }}%;">
+                            {{ poll.percentages.D|floatformat:0 }}%
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
+    {% endfor %}
+    {% else %}
+    <div class="alert alert-warning">
+        No poll data is available yet.
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
