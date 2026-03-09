@@ -157,10 +157,10 @@ def create_poll(request):
 
     return render(request, "core/create_poll.html")
 
-def close_poll(request, code):
+def toggle_poll(request, code):
     session = Session.objects.get(code=code)
 
-    session.is_active = False
+    session.is_active = not session.is_active
     session.save()
 
     return redirect("dashboard")
