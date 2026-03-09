@@ -20,6 +20,9 @@ def join(request):
     return render(request, "core/join.html")
 
 def login_view(request):
+    if request.method == "POST":
+        return redirect("dashboard")
+
     return render(request, "core/login.html")
 
 def vote(request, code):
