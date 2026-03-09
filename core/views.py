@@ -69,25 +69,31 @@ def vote(request, code):
 
 
 def dashboard(request):
-    question = Question.objects.order_by("-id").first()
+    sessions = Session.objects.order_by("-created_at")
 
-    if not question:
-        return render(request, "core/dashboard.html", {
-            "question": None
-        })
+    poll_data = []
 
-    votes = Vote.objects.filter(question=question)
+    for session in sessions:
+        question = Question.objects.filter(session=session).first()
 
-    results = {
-        "A": votes.filter(choice="A").count(),
-        "B": votes.filter(choice="B").count(),
-        "C": votes.filter(choice="C").count(),
-        "D": votes.filter(choice="D").count(),
-    }
+        if question:
+            votes = Vote.objects.filter(question=question)
+
+            results = {
+                "A": votes.filter(choice="A").count(),
+                "B": votes.filter(choice="B").count(),
+                "C": votes.filter(choice="C").count(),
+                "D": votes.filter(choice="D").count(),
+            }
+
+            poll_data.append({
+                "session": session,
+                "question": question,
+                "results": results
+            })
 
     return render(request, "core/dashboard.html", {
-        "question": question,
-        "results": results
+        "poll_data": poll_data
     })
 
 def create_poll(request):

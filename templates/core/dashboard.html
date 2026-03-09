@@ -15,14 +15,15 @@
         </a>
     </div>
 
-    {% if question %}
+    {% if poll_data %}
+    {% for poll in poll_data %}
     <div class="card shadow-sm mb-3 border-0">
         <div class="card-body">
-            <h5 class="card-title fw-bold">{{ question.text }}</h5>
+            <h5 class="card-title fw-bold">{{ poll.question.text }}</h5>
             <p class="card-text text-muted">
-                PIN: <span class="fw-bold text-primary fs-5">{{ question.session.code }}</span>
+                PIN: <span class="fw-bold text-primary fs-5">{{ poll.session.code }}</span>
                 | Status:
-                {% if question.session.is_active %}
+                {% if poll.session.is_active %}
                 <span class="text-success fw-bold">Active</span>
                 {% else %}
                 <span class="text-danger fw-bold">Closed</span>
@@ -33,31 +34,32 @@
                 <h6 class="fw-bold">Results</h6>
                 <ul class="list-group">
                     <li class="list-group-item d-flex justify-content-between">
-                        <span>A. {{ question.option_a }}</span>
-                        <span>{{ results.A }} votes</span>
+                        <span>A. {{ poll.question.option_a }}</span>
+                        <span>{{ poll.results.A }} votes</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between">
-                        <span>B. {{ question.option_b }}</span>
-                        <span>{{ results.B }} votes</span>
+                        <span>B. {{ poll.question.option_b }}</span>
+                        <span>{{ poll.results.B }} votes</span>
                     </li>
 
-                    {% if question.option_c %}
+                    {% if poll.question.option_c %}
                     <li class="list-group-item d-flex justify-content-between">
-                        <span>C. {{ question.option_c }}</span>
-                        <span>{{ results.C }} votes</span>
+                        <span>C. {{ poll.question.option_c }}</span>
+                        <span>{{ poll.results.C }} votes</span>
                     </li>
                     {% endif %}
 
-                    {% if question.option_d %}
+                    {% if poll.question.option_d %}
                     <li class="list-group-item d-flex justify-content-between">
-                        <span>D. {{ question.option_d }}</span>
-                        <span>{{ results.D }} votes</span>
+                        <span>D. {{ poll.question.option_d }}</span>
+                        <span>{{ poll.results.D }} votes</span>
                     </li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </div>
+    {% endfor %}
     {% else %}
     <div class="alert alert-warning">
         No poll data is available yet.
