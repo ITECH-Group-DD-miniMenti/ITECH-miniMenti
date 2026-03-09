@@ -1,6 +1,9 @@
 from polls.models import Session, Question, Vote
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+import qrcode
+import base64
+from io import BytesIO
 
 def home(request):
     return render(request, "core/home.html")
@@ -89,10 +92,18 @@ def dashboard(request):
                 "D": votes.filter(choice="D").count(),
             }
 
+            join_url = request.build_absolute_uri(f"/vote/{session.code}/")
+
+            qr = qrcode.make(join_url)
+            buffer = BytesIO()
+            qr.save(buffer, format="PNG")
+            qr_base64 = base64.b64encode(buffer.getvalue()).decode()
+
             poll_data.append({
                 "session": session,
                 "question": question,
-                "results": results
+                "results": results,
+                "qr": qr_base64
             })
 
     return render(request, "core/dashboard.html", {
