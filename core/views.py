@@ -1,7 +1,6 @@
-from django.shortcuts import render
 from polls.models import Session, Question, Vote
 from django.shortcuts import render, redirect
-from django.db.models import Count
+from django.contrib.auth.models import User
 
 def home(request):
     return render(request, "core/home.html")
@@ -70,7 +69,7 @@ def vote(request, code):
 
 
 def dashboard(request):
-    question = Question.objects.first()
+    question = Question.objects.order_by("-id").first()
 
     if not question:
         return render(request, "core/dashboard.html", {
@@ -90,3 +89,33 @@ def dashboard(request):
         "question": question,
         "results": results
     })
+
+def create_poll(request):
+    if request.method == "POST":
+        title = request.POST.get("title")
+        question_text = request.POST.get("question_text")
+        option_a = request.POST.get("option_a")
+        option_b = request.POST.get("option_b")
+        option_c = request.POST.get("option_c")
+        option_d = request.POST.get("option_d")
+
+        host = User.objects.first()
+
+        session = Session.objects.create(
+            title=title,
+            host=host,
+            is_active=True
+        )
+
+        Question.objects.create(
+            session=session,
+            text=question_text,
+            option_a=option_a,
+            option_b=option_b,
+            option_c=option_c,
+            option_d=option_d
+        )
+
+        return redirect("dashboard")
+
+    return render(request, "core/create_poll.html")
