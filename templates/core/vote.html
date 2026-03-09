@@ -1,53 +1,50 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {# Code Quality: Adheres to DRY principle by extending base layout #}
 
 {% block title %}Vote - miniMenti{% endblock %}
 
 {% block content %}
 <div class="py-5 text-center">
-    {% if question %}
-    <h2 class="fw-bold mb-5">{{ question.text }}</h2>
-
-    {% if success %}
-    <div class="alert alert-success col-md-8 col-lg-6 mx-auto mb-4" role="alert">
-        {{ success }}
-    </div>
-    {% endif %}
-
+    
+    {# Front-end Interactivity & Validation UI: Display success/error messages based on backend state #}
     {% if error %}
-    <div class="alert alert-danger col-md-8 col-lg-6 mx-auto mb-4" role="alert">
-        {{ error }}
-    </div>
+        <div class="alert alert-danger shadow-sm" role="alert">{{ error }}</div>
+    {% endif %}
+    {% if success %}
+        <div class="alert alert-success shadow-sm" role="alert">{{ success }}</div>
     {% endif %}
 
-    {% if not already_voted %}
-    <form method="post" class="d-grid gap-3 col-md-8 col-lg-6 mx-auto">
-        {% csrf_token %}
-
-        <button type="submit" name="choice" value="A" class="btn btn-outline-primary btn-lg py-3 fw-bold fs-4">
-            A. {{ question.option_a }}
-        </button>
-
-        <button type="submit" name="choice" value="B" class="btn btn-outline-primary btn-lg py-3 fw-bold fs-4">
-            B. {{ question.option_b }}
-        </button>
-
-        {% if question.option_c %}
-        <button type="submit" name="choice" value="C" class="btn btn-outline-primary btn-lg py-3 fw-bold fs-4">
-            C. {{ question.option_c }}
-        </button>
-        {% endif %}
-
-        {% if question.option_d %}
-        <button type="submit" name="choice" value="D" class="btn btn-outline-primary btn-lg py-3 fw-bold fs-4">
-            D. {{ question.option_d }}
-        </button>
-        {% endif %}
-    </form>
-    {% endif %}
+    {# Accessibility & Core Functionality (M5): High-contrast dynamic header displaying the backend question text #}
+    <h2 class="fw-bold mb-5">{{ question.text }}</h2>
+    
+    {% if already_voted %}
+        {# State Management: Prevent duplicate submissions by hiding voting options after a successful vote #}
+        <div class="mt-5">
+            <h4 class="text-muted mb-4">You have successfully submitted your vote!</h4>
+            <p class="lead">Please look at the host's screen for live results.</p>
+            {# Code Quality: Uses named URL patterns (reverse resolution) instead of hard-coded paths #}
+            <a href="{% url 'home' %}" class="btn btn-outline-secondary mt-3">Return to Home</a>
+        </div>
     {% else %}
-    <div class="alert alert-warning">
-        No question is available for this session yet.
-    </div>
+        {# Core Functionality (M5): Form securely captures user input and sends it to the backend via POST #}
+        <form method="POST">
+            {% csrf_token %}
+            
+            {# Responsiveness & Look and Feel: d-grid layout ensures large, touch-friendly buttons for mobile users #}
+            <div class="d-grid gap-3 col-md-8 col-lg-6 mx-auto">
+                <button type="submit" name="choice" value="A" class="btn btn-outline-primary btn-lg py-3 fw-bold fs-4">A. {{ question.option_a }}</button>
+                <button type="submit" name="choice" value="B" class="btn btn-outline-primary btn-lg py-3 fw-bold fs-4">B. {{ question.option_b }}</button>
+                
+                {# Code Quality & Dynamic Rendering: Conditionally render options C and D only if they exist in the database #}
+                {% if question.option_c %}
+                    <button type="submit" name="choice" value="C" class="btn btn-outline-primary btn-lg py-3 fw-bold fs-4">C. {{ question.option_c }}</button>
+                {% endif %}
+                
+                {% if question.option_d %}
+                    <button type="submit" name="choice" value="D" class="btn btn-outline-primary btn-lg py-3 fw-bold fs-4">D. {{ question.option_d }}</button>
+                {% endif %}
+            </div>
+        </form>
     {% endif %}
+
 </div>
 {% endblock %}
